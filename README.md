@@ -13,7 +13,7 @@ band selection methods: BSNET, EGCSR-R GSM, SpaBS, BIA.
 
 classification models: DT, KNN, SVM, ShuffleNet V2.
 
-![image](https://github.com/mepleleo/BIA-CNNbandselection/blob/master/BIA.png)
+![image](https://github.com/mepleleo/BIA-CNNbandselection/blob/main/BIA.png)
 
 
 required package:
