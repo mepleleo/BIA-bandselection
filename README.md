@@ -11,7 +11,7 @@ The effects of 4 band selection methods on 4 classification models are compared.
 
 band selection methods: BSNET, EGCSR-R GSM, SpaBS, BIA.
 
-classification models: DT, KNN, SVM, ShuffleNet V2.
+classification models: DT, KNN, PLS, SVM, ShuffleNet V2, 1D-CNN.
 
 ![image](https://github.com/mepleleo/BIA-CNNbandselection/blob/main/BIA.png)
 
@@ -24,10 +24,10 @@ scipy
 sklearn
 skimage
 matplotlib
-pandas
+pandas==1.0.5
 
 # BIA:
-pytorch==1.5.0
+pytorch>=1.5.0
 
 ```
 
