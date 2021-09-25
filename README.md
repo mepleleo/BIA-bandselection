@@ -5,15 +5,15 @@
 Update date: 2021.08.15
 
 This code is the implemention of band influence algorithm (BIA)
-If u use the code, please cite it.
 
-The effects of 4 band selection methods on 4 classification models are compared.
 
-band selection methods: BSNET, EGCSR-R GSM, SpaBS, BIA.
+The effects of 5 band selection methods on 4 classification models were compared.
 
-classification models: DT, KNN, PLS, SVM, ShuffleNet V2, 1D-CNN.
+band selection methods: BSNET, EGCSR-R GSM,MVPCA SpaBS, BIA.
 
-![image](https://github.com/mepleleo/BIA-CNNbandselection/blob/main/BIA.png)
+classification models: DT, KNN,  SVM, ShuffleNet V2.
+
+![image](https://github.com/mepleleo/BIA-CNNbandselection/blob/main/BIA_.png)
 
 
 required package:
@@ -25,9 +25,8 @@ sklearn
 skimage
 matplotlib
 pandas==1.0.5
-
-# BIA:
-pytorch>=1.5.0
+# BIA(shuff):
+pytorch==1.9.0
 
 ```
 
