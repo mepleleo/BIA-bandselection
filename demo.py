@@ -48,7 +48,7 @@ def remove_equal_value2(acc, times=50):
     return acc
 
 def Bia_method(sel_bands_num,spectral_train, label_train,func_eb,Step=3):
-    # Step 2.2
+    # 
     acc_or = np.ones((128))
     for ii in range(0,128):
         img_eb = spectral_train.copy()
@@ -69,7 +69,7 @@ def Bia_method(sel_bands_num,spectral_train, label_train,func_eb,Step=3):
             acc_or[ii+2] = svm_acc_i
     acc_smooth = remove_equal_value2(acc_or)
     
-    # Step 3
+    # 
     spectral_mean = []
     for class_i in range(1,4):
         spectral_i = spectral_train[label_train==class_i]
@@ -87,7 +87,7 @@ def Bia_method(sel_bands_num,spectral_train, label_train,func_eb,Step=3):
     # print(cha_all)
     integral_all = integrate.trapz(cha_all,)
 
-    # Step 4.1
+    # 
     part = 3
     distance = len(cha_all)//part
     selected_bands = np.array([],dtype=np.uint32)
@@ -98,7 +98,7 @@ def Bia_method(sel_bands_num,spectral_train, label_train,func_eb,Step=3):
         maxInd = argrelextrema(acc_smooth, np.greater) # Return the index value
         end_band = distance*(part_i+1)
         if end_band not in maxInd[0]:
-            end_band_idx = np.argmin(np.abs(maxInd[0] - end_band)) # Step 4,2
+            end_band_idx = np.argmin(np.abs(maxInd[0] - end_band)) # 
             end_band = maxInd[0][end_band_idx]
         # The value of the start band cannot be greater than the value of the end band.
         if end_band < distance*(part_i+1)-distance//2 or end_band > distance*(part_i+1)+distance//2:
@@ -106,7 +106,7 @@ def Bia_method(sel_bands_num,spectral_train, label_train,func_eb,Step=3):
         if start_band > end_band or start_band == end_band:
             raise ValueError
         
-        # Step 4.3 
+        # 
         # Calculate the integral of each part and the corresponding number of feature bands
         integral01 = integrate.trapz(cha_all[start_band:end_band],)/integral_all
         if part_i == (part-1):
@@ -119,14 +119,14 @@ def Bia_method(sel_bands_num,spectral_train, label_train,func_eb,Step=3):
             band_num_i = rest
             acc_part = acc_smooth[start_band : ]
         
-        # Step 4.4 extract local min  ## np.less,np.greater 
+        #  extract local min  ## np.less,np.greater 
         minInd = argrelextrema(acc_part, np.less) # 
         index_value = np.array(minInd, dtype=np.uint32)+(start_band)
         rest = rest - band_num_i
         start_band = end_band
         value01 = acc_smooth[index_value]
         
-        # Step 4.4 If the minimum ACCn of part_i is greater than 85%, the Step size is set to 5.
+        #  If minimum ACC is greater than 85%, the Step size is set to 5.
         region_min= np.min(acc_part)
         if region_min > 0.85 and Step==3:
             raise ValueError
@@ -139,7 +139,7 @@ def Bia_method(sel_bands_num,spectral_train, label_train,func_eb,Step=3):
         #
         idx_sort = idx_value.T[np.lexsort(idx_value)].T
         
-        # Step 4.5, 4.6
+        # 
         # When the number of local extremes is less than the number of characteristic bands in the partition, 
         # the feature bands are selected from small to large with a Step size of 2.
         while idx_sort.shape[1] < band_num_i:
@@ -155,7 +155,7 @@ def Bia_method(sel_bands_num,spectral_train, label_train,func_eb,Step=3):
                 out_idx_part.append(i)
         out_idx_part = out_idx_part[:band_num_i]
         
-        # Step 4.7
+        # 
         selected_bands = np.append(selected_bands,np.array(out_idx_part,dtype=np.uint32))
     print('bia selected bands',len(selected_bands),selected_bands)
     return selected_bands,acc_smooth
@@ -245,7 +245,7 @@ def check_Step(sel_bands_num, acc_or,spectral_mean,):
             b += 1
     integral_all = integrate.trapz(cha_all,)
     
-    # Step 4.1
+    # 
     part = 3
     distance = len(cha_all)//part
     rest = sel_bands_num
@@ -255,7 +255,7 @@ def check_Step(sel_bands_num, acc_or,spectral_mean,):
         maxInd = argrelextrema(acc_smooth, np.greater)
         end_band = distance*(part_i+1)
         if end_band not in maxInd[0]:
-            end_band_idx = np.argmin(np.abs(maxInd[0] - end_band))  # Step 4,2
+            end_band_idx = np.argmin(np.abs(maxInd[0] - end_band))  # 
             end_band = maxInd[0][end_band_idx]
         # The value of the start band cannot be greater than the value of the end band.
         if end_band < distance*(part_i+1)-distance//2 or end_band > distance*(part_i+1)+distance//2:
@@ -263,7 +263,7 @@ def check_Step(sel_bands_num, acc_or,spectral_mean,):
         if start_band > end_band or start_band == end_band:
             raise ValueError
         
-        # Step 4.3 
+        # 
         # Calculate the integral of each part and the corresponding number of feature bands
         integral01 = integrate.trapz(cha_all[start_band:end_band],)/integral_all
         if part_i == (part-1):
@@ -276,14 +276,14 @@ def check_Step(sel_bands_num, acc_or,spectral_mean,):
             band_num_i = rest
             acc_part = acc_smooth[start_band : ]
         
-        # Step 4.4 extract local min  ## np.less,np.greater 
+        #  extract local min  ## np.less,np.greater 
         minInd = argrelextrema(acc_part, np.less)
         index_value = np.array(minInd, dtype=np.uint32)+(start_band)
         rest = rest - band_num_i
         start_band = end_band
         value01 = acc_smooth[index_value]
         
-        # Step 4.4 If the minimum ACCn of part_i is greater than 85%, the Step size is set to 5.
+        #
         region_min= np.min(value01)
         if region_min > 0.85:
             raise ValueError
@@ -304,7 +304,7 @@ def Bia_method_cnn(sel_bands_num, acc_or,spectral_mean,):
     # print(cha_all)
     integral_all = integrate.trapz(cha_all,)
     
-    # Step 4.1
+    #
     part = 3
     distance = len(cha_all)//part
     selected_bands = np.array([],dtype=np.uint32)
@@ -315,7 +315,7 @@ def Bia_method_cnn(sel_bands_num, acc_or,spectral_mean,):
         maxInd = argrelextrema(acc_smooth, np.greater)
         end_band = distance*(part_i+1)
         if end_band not in maxInd[0]:
-            end_band_idx = np.argmin(np.abs(maxInd[0] - end_band)) # Step 4,2
+            end_band_idx = np.argmin(np.abs(maxInd[0] - end_band)) # 
             end_band = maxInd[0][end_band_idx]
         # The value of the start band cannot be greater than the value of the end band.
         if end_band < distance*(part_i+1)-distance//2 or end_band > distance*(part_i+1)+distance//2:
@@ -323,7 +323,7 @@ def Bia_method_cnn(sel_bands_num, acc_or,spectral_mean,):
         if start_band > end_band or start_band == end_band:
             raise ValueError
         
-        # Step 4.3 
+        # 
         # Calculate the integral of each part and the corresponding number of feature bands
         integral01 = integrate.trapz(cha_all[start_band:end_band],)/integral_all
         if part_i == (part-1):
@@ -336,7 +336,7 @@ def Bia_method_cnn(sel_bands_num, acc_or,spectral_mean,):
             band_num_i = rest
             acc_part = acc_smooth[start_band : ]
         
-        # Step 4.4 extract local min  ## np.less,np.greater 
+        #  extract local min  ## np.less,np.greater 
         minInd = argrelextrema(acc_part, np.less)
         index_value = np.array(minInd, dtype=np.uint32)+(start_band)
         rest = rest - band_num_i
@@ -350,7 +350,7 @@ def Bia_method_cnn(sel_bands_num, acc_or,spectral_mean,):
         #
         idx_sort = idx_value.T[np.lexsort(idx_value)].T
         
-        # Step 4.5, 4.6
+        # 
         # When the number of local extremes is less than the number of characteristic bands in the partition, 
         # the feature bands are selected from small to large with a Step size of 2.
         while idx_sort.shape[1] < band_num_i:
@@ -365,7 +365,7 @@ def Bia_method_cnn(sel_bands_num, acc_or,spectral_mean,):
             if i not in out_idx_part:
                 out_idx_part.append(i)
         out_idx_part = out_idx_part[:band_num_i]
-        # Step 4.7
+        # 
         selected_bands = np.append(selected_bands,np.array(out_idx_part,dtype=np.uint32))
     print('bia selected bands',len(selected_bands),selected_bands)
     return selected_bands
@@ -412,7 +412,7 @@ def dt_knn_svm(val_method,bs_method,sel_bands_num,times,excel_name,ratio):
     gt_train = label_train
     img_test = spectral_test
     gt_test = label_test
-    # Step 2.1, generate all bands acc, and trained classifier
+    # generate all bands acc, and trained classifier
     if val_method == 'svm':
         y_128_predict, func = svm_val_128(img_train, gt_train,img_test,gt_test,
                                 in_channels=128,val_method=val_method,method_i=bs_method)
@@ -460,13 +460,13 @@ class Parameters:
 def shuff(ratio,sel_bands_num,input_shape,times):
     args = Parameters()
     lines_train, lines_test = load_data2(args.data_name, times, ratio)
-    # Step 2.1; train cnn with all bands
+    # train cnn with all bands
     eb = 128
     net = train_cnn(args,lines_train,None,input_shape,eb,times,test_=False)
-    # Step 2.2; generate new dataset and input into the trained model, then get the ACC curve
+    # generate new dataset and input into the trained model, then get the ACC curve
     lines_train = lines_aug(lines_train)
     acc_or = gen_acc_curve(args, net, lines_train, input_shape,Step=3)
-    # Step 3; calculate mean spectrum for calculating the RBn 
+    # calculate mean spectrum for calculating the RBn 
     spectral_mean = cal_mean_spectral(lines_train)
     # if ACCn > threshold, set the zering step=5
     try:
@@ -474,7 +474,7 @@ def shuff(ratio,sel_bands_num,input_shape,times):
     except :
         acc_or = gen_acc_curve(args, net, lines_train, input_shape,Step=5)
 
-    ### Step 4 extract feature bands
+    ### extract feature bands
     selected_bands = []
     for bands_num in range(4, sel_bands_num+1,2):
         selected_band_i = Bia_method_cnn(bands_num, acc_or,spectral_mean,)
