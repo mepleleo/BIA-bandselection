@@ -1,8 +1,8 @@
-# BIA-CNNbandselection
+# BIA-bandselection, hyperspectral band selection
 
 ## band influence algorithm (Classification-of-Hyperspectral-Moldy-Peanut)
 
-Update date: 2021.08.15
+Update date: 2021.09.25
 
 This code is the implemention of band influence algorithm (BIA)
 
@@ -13,7 +13,7 @@ band selection methods: BSNET, EGCSR-R GSM,MVPCA SpaBS, BIA.
 
 classification models: DT, KNN,  SVM, ShuffleNet V2.
 
-![image](https://github.com/mepleleo/BIA-CNNbandselection/blob/main/BIA_.png)
+![image](https://github.com/mepleleo/BIA-bandselection/blob/main/BIA_.png)
 
 
 required package:
