@@ -26,7 +26,7 @@ from dataset import Pnt_eb_Dataset, lines_aug,load_data,load_data2
 
 
 '''
-traditional classification model
+1. traditional classification model
 Band influence algorithm (using dt,knn,svm)
 '''
 def remove_equal_value2(acc, times=50):
@@ -162,7 +162,7 @@ def Bia_method(sel_bands_num,spectral_train, label_train,func_eb,Step=3):
 
 
 '''
-CNN classification model
+2. CNN classification model
 Band influence algorithm (using ShuffleNet V2)
 '''
 def read_mat(path):
@@ -404,24 +404,22 @@ def svm_val(img_train, gt_train,img_test,):
 
 ######################################
 # --use dt_knn_svm as classifier----##
+# pixel based classifier 基于像元的分类器
 ######################################
-def dt_knn_svm(val_method,bs_method,sel_bands_num,times,excel_name,ratio):
+def dt_knn_svm(val_method,sel_bands_num,times,excel_name,ratio):
     # load all data
     spectral_train,label_train,spectral_test,label_test = load_data(times,excel_name,ratio)
-    img_train = spectral_train
-    gt_train = label_train
+    img_train = spectral_train  # shape=(m,n) row is sample, col is spectral data
+    gt_train = label_train      # shape=(m,)  label, each sample corresponding a label
     img_test = spectral_test
     gt_test = label_test
     # generate all bands acc, and trained classifier
     if val_method == 'svm':
-        y_128_predict, func = svm_val_128(img_train, gt_train,img_test,gt_test,
-                                in_channels=128,val_method=val_method,method_i=bs_method)
+        y_128_predict, func = svm_val_128(img_train, gt_train,img_test,)
     elif val_method == 'knn':
-        y_128_predict, func = knn_val(img_train, gt_train,img_test,gt_test,in_channels=128, 
-                                val_method=val_method,method_i=bs_method)
+        y_128_predict, func = knn_val(img_train, gt_train,img_test,)
     elif val_method == 'dt':
-        y_128_predict, func = dt_val(img_train, gt_train,img_test,gt_test,in_channels=128, 
-                                val_method=val_method,method_i=bs_method)
+        y_128_predict, func = dt_val(img_train, gt_train,img_test)
 
     ### extract feature bands
     selected_bands = []
@@ -456,15 +454,22 @@ class Parameters:
 
 ######################################################
 # ---use ShuffleNet V2 as classification model -----#
+# ShuffleNet V2 is a image based model. the input shape is 104*104*bands
+# ShuffleNet V2是图像分类模型，输入数据的格式是104*104*波段
 ######################################################
 def shuff(ratio,sel_bands_num,input_shape,times):
     args = Parameters()
+    # load data path and label 加载图像文件路径和标签
+    # lines_train: row is sample, last col is label 行是样本路径，最后一列是标签
     lines_train, lines_test = load_data2(args.data_name, times, ratio)
     # train cnn with all bands
     eb = 128
+    # train CNN model, and generate a trained model 
+    # 训练ShuffleNet V2模型，得到一个训练好的模型 net
+    # 模型训练的代码在网上找吧，也可以试试vgg的，这个不重要
     net = train_cnn(args,lines_train,None,input_shape,eb,times,test_=False)
     # generate new dataset and input into the trained model, then get the ACC curve
-    lines_train = lines_aug(lines_train)
+    lines_train = lines_aug(lines_train) # 数据增强，可以注释不用
     acc_or = gen_acc_curve(args, net, lines_train, input_shape,Step=3)
     # calculate mean spectrum for calculating the RBn 
     spectral_mean = cal_mean_spectral(lines_train)
@@ -484,5 +489,15 @@ def shuff(ratio,sel_bands_num,input_shape,times):
 
 
 
+if __name__ == "__main__":
+    val_method = 'knn'
+    sel_bands_num = 40
+    times = 1
+    excel_name = './your_data_file.xlsx'
+    ratio = 0.2
+    ## dt knn svm
+    selected_bands = dt_knn_svm(val_method,sel_bands_num,times,excel_name,ratio)
+    ## shuff
+    # selected_bands = shuff(ratio,sel_bands_num,input_shape=(104,104,128),times=times)
 
 
