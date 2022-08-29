@@ -1,6 +1,7 @@
 # BIA-bandselection, hyperspectral band selection
 
 ## band influence algorithm (Classification-of-Hyperspectral-Moldy-Peanut)
+paper: A Band Influence Algorithm for Hyperspectral Band Selection to Classify Moldy Peanuts  
 
 Update date: 2022.05.29
 
